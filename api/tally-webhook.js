@@ -11,11 +11,24 @@ import { sendEmail, arrayBufferToBase64 } from "../lib/email.js";
 // Tally sends { data: { fields: [ { label, value }, ... ] } }.
 // Field labels here must match exactly what you name the questions
 // when you build the form in Tally.
+//
+// Dropdown/choice fields don't send the option's text as `value` - they
+// send the option's internal id, with the id->text mapping in `options`.
+// Plain text fields have no `options` array, so this passes them through.
+function resolveFieldValue(field) {
+      if (Array.isArray(field.options) && field.options.length) {
+              const raw = Array.isArray(field.value) ? field.value[0] : field.value;
+              const match = field.options.find((o) => o.id === raw);
+              if (match) return match.text;
+      }
+      return field.value;
+}
+
 function mapTallyFields(payload) {
-    const byLabel = {};
-    for (const f of payload?.data?.fields || []) {
-          byLabel[f.label] = f.value;
-    }
+      const byLabel = {};
+      for (const f of payload?.data?.fields || []) {
+              byLabel[f.label] = resolveFieldValue(f);
+      }
     return {
           bride: byLabel["Bride's name"] || "",
           groom: byLabel["Groom's name"] || "",
