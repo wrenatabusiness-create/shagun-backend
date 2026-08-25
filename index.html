@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shubh — personalized invites for every celebration</title>
+<meta name="description" content="Personalized wedding invites generated in minutes, from Shubh by Wrenata. More celebrations coming soon.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap">
+<style>
+  :root {
+    --bg: #EDEEE9; --surface: #F8F9F4; --surface-2: #E4E5DE;
+    --ink: #1A231F; --ink-muted: #52625A;
+    --accent: #B5642A; --accent-ink: #7C4218; --teal: #1F5D57;
+    --line: #D6D6C9;
+    --good: #2F7A4F; --good-bg: #E4EEE6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141815; --surface: #1B201C; --surface-2: #232923;
+      --ink: #EDEEE7; --ink-muted: #9BA69D;
+      --accent: #E08A42; --accent-ink: #F0A868; --teal: #5FB5AA;
+      --line: #333A34; --good: #5CBE84; --good-bg: #1E2E23;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141815; --surface: #1B201C; --surface-2: #232923;
+    --ink: #EDEEE7; --ink-muted: #9BA69D;
+    --accent: #E08A42; --accent-ink: #F0A868; --teal: #5FB5AA;
+    --line: #333A34; --good: #5CBE84; --good-bg: #1E2E23;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { font-family: "IBM Plex Serif", Georgia, serif; text-wrap: balance; }
+
+  /* ---------- header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 20; background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 0;
+  }
+  .brand { display: flex; align-items: baseline; gap: 8px; font-family: "IBM Plex Serif", serif; font-weight: 700; font-size: 21px; }
+  .brand .by { font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 400; color: var(--ink-muted); letter-spacing: 0.04em; }
+  .nav-links { display: flex; gap: 28px; font-size: 14.5px; }
+  .nav-links a { text-decoration: none; color: var(--ink-muted); }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    display: inline-block; padding: 9px 18px; border-radius: 5px; background: var(--accent); color: #fff;
+    text-decoration: none; font-size: 14px; font-weight: 600;
+  }
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 56px; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 16px;
+  }
+  .hero h1 { font-size: clamp(36px, 5.4vw, 58px); font-weight: 700; line-height: 1.08; max-width: 15ch; }
+  .hero .accent-word { color: var(--accent-ink); }
+  .hero p.dek { margin-top: 20px; max-width: 52ch; color: var(--ink-muted); font-size: 18px; }
+  .hero-ctas { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; border-radius: 6px;
+    font-size: 15px; font-weight: 600; text-decoration: none; border: 1px solid transparent; cursor: pointer;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { opacity: 0.92; }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-secondary:hover { border-color: var(--ink-muted); }
+
+  /* hero card fan */
+  .hero-visual { margin-top: 56px; display: flex; justify-content: center; gap: -40px; position: relative; height: 300px; }
+  .fan-card {
+    position: absolute; width: 176px; aspect-ratio: 5/7; border-radius: 5px; box-shadow: 0 16px 40px rgba(0,0,0,0.22);
+    top: 0;
+  }
+  .fan-card.c1 { left: calc(50% - 260px); transform: rotate(-9deg); }
+  .fan-card.c2 { left: calc(50% - 88px); transform: rotate(-2deg) translateY(-14px); z-index: 2; }
+  .fan-card.c3 { left: calc(50% + 88px); transform: rotate(4deg) translateY(-6px); z-index: 1; }
+  .fan-card.c4 { left: calc(50% + 260px); transform: rotate(10deg); }
+  @media (max-width: 760px) {
+    .hero-visual { height: 220px; }
+    .fan-card { width: 128px; }
+    .fan-card.c1 { left: calc(50% - 180px); }
+    .fan-card.c3 { left: calc(50% + 56px); }
+    .fan-card.c4 { left: calc(50% + 180px); }
+  }
+
+  .invite-card-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center; }
+  .frame { position: absolute; inset: 10px; border-width: 1.5px; border-style: solid; }
+  .frame-inner { position: absolute; inset: 14px; border: 1px solid; opacity: 0.6; }
+  .ic-header { font-size: 8px; font-weight: 700; letter-spacing: 0.12em; }
+  .ic-names { font-family: "Playfair Display", serif; font-size: 17px; font-weight: 700; line-height: 1.25; margin: 5px 0; }
+  .ic-amp { display: block; font-size: 8px; font-family: "IBM Plex Sans", sans-serif; margin: 2px 0; }
+  .ic-date { font-size: 7.5px; font-weight: 600; margin-top: 4px; }
+
+  .invite-card.modern { background: linear-gradient(180deg, #FBF7F1 0%, #F6EFE4 100%); }
+  .invite-card.modern .frame { border-color: #C9A15C; }
+  .invite-card.modern .ic-header { color: #A9824A; }
+  .invite-card.modern .ic-names { color: #3B342B; }
+  .invite-card.modern .ic-amp { color: #C9A15C; font-style: italic; }
+  .invite-card.modern .ic-date { color: #3B342B; }
+
+  .invite-card.punjabi { background: radial-gradient(circle at 50% 0%, #7A1220 0%, #4A0812 70%); }
+  .invite-card.punjabi .frame, .invite-card.punjabi .frame-inner { border-color: #D8AE5C; }
+  .invite-card.punjabi .ic-header { color: #F6E3B4; font-family: "IBM Plex Sans", sans-serif; }
+  .invite-card.punjabi .ic-names { color: #FCEFC4; }
+  .invite-card.punjabi .ic-amp { color: #D8AE5C; text-transform: uppercase; }
+  .invite-card.punjabi .ic-date { color: #FCEFC4; }
+
+  .invite-card.south { background: linear-gradient(180deg, #FBF3E1 0%, #F5E7C6 100%); }
+  .invite-card.south .frame, .invite-card.south .frame-inner { border-color: #C9A15C; }
+  .invite-card.south .ic-header { color: #7A1F1F; font-family: "IBM Plex Sans", sans-serif; }
+  .invite-card.south .ic-names { color: #7A1F1F; }
+  .invite-card.south .ic-amp { color: #C9A15C; }
+  .invite-card.south .ic-date { color: #5A3A1A; }
+
+  .invite-card.bengali { background: linear-gradient(180deg, #FFFDF9 0%, #FFF6F2 100%); }
+  .invite-card.bengali .frame { border-color: #B0202E; border-width: 2px; }
+  .invite-card.bengali .frame-inner { border-color: #D8AE5C; }
+  .invite-card.bengali .ic-header { color: #B0202E; font-family: "IBM Plex Sans", sans-serif; }
+  .invite-card.bengali .ic-names { color: #7A1220; }
+  .invite-card.bengali .ic-amp { color: #B0202E; }
+  .invite-card.bengali .ic-date { color: #5A2020; }
+
+  /* ---------- section shells ---------- */
+  section { padding: 72px 0; }
+  section.alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .section-head { max-width: 60ch; margin-bottom: 40px; }
+  .section-head .eyebrow { margin-bottom: 12px; }
+  .section-head h2 { font-size: clamp(26px, 3.4vw, 34px); font-weight: 700; }
+  .section-head p { margin-top: 12px; color: var(--ink-muted); font-size: 16px; }
+
+  /* how it works */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+  .step .n { font-family: "IBM Plex Mono", monospace; color: var(--accent); font-size: 13px; margin-bottom: 10px; }
+  .step h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .step p { color: var(--ink-muted); font-size: 14.5px; }
+
+  /* style gallery */
+  .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+  .gallery-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .gallery-item .invite-card { width: 100%; max-width: 220px; aspect-ratio: 5/7; position: relative; border-radius: 5px; overflow: hidden; box-shadow: 0 10px 26px rgba(0,0,0,0.16); }
+  .gallery-item .invite-card .ic-header { font-size: 10px; }
+  .gallery-item .invite-card .ic-names { font-size: 24px; }
+  .gallery-item .invite-card .ic-amp { font-size: 10px; }
+  .gallery-item .invite-card .ic-date { font-size: 10.5px; }
+  .gallery-label { font-size: 14px; font-weight: 600; }
+  .gallery-note { font-size: 12.5px; color: var(--ink-muted); }
+
+  /* pricing */
+  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 860px) { .pricing { grid-template-columns: 1fr; } }
+  .price-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 28px; display: flex; flex-direction: column; }
+  .price-card.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .price-tier { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .price-amount { font-size: 32px; font-weight: 700; font-family: "IBM Plex Serif", serif; margin-bottom: 4px; }
+  .price-amount .num { font-variant-numeric: tabular-nums; }
+  .price-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 20px; }
+  .price-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; flex: 1; }
+  .price-list li { font-size: 14px; padding-left: 20px; position: relative; }
+  .price-list li::before { content: "✓"; position: absolute; left: 0; color: var(--good); font-weight: 700; }
+  .price-card .btn { justify-content: center; width: 100%; }
+
+  /* more occasions */
+  .occasions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .occasions { grid-template-columns: repeat(2, 1fr); } }
+  .occasion-card {
+    background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 22px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .occasion-card h3 { font-size: 15.5px; font-weight: 600; }
+  .occasion-card p { font-size: 13px; color: var(--ink-muted); }
+  .soon-pill {
+    align-self: flex-start; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: 0.06em;
+    text-transform: uppercase; background: var(--surface-2); color: var(--ink-muted); padding: 3px 9px; border-radius: 100px;
+    margin-top: 4px;
+  }
+
+  /* cta band */
+  .cta-band { text-align: center; }
+  .cta-band h2 { font-size: clamp(26px, 3.6vw, 36px); margin-bottom: 14px; }
+  .cta-band p { color: var(--ink-muted); max-width: 48ch; margin: 0 auto 28px; }
+
+  /* footer */
+  footer { border-top: 1px solid var(--line); padding: 32px 0; }
+  .footer-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--ink-muted); }
+  .footer-row a { text-decoration: none; }
+  .footer-row a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">Shubh <span class="by">by Wrenata</span></div>
+    <nav class="nav-links">
+      <a href="#weddings">Wedding invites</a>
+      <a href="#occasions">More occasions</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <a class="nav-cta" href="#weddings">Order now</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Personalized invites, generated in minutes</div>
+    <h1>Invites that feel<br>made for <span class="accent-word">your</span> celebration</h1>
+    <p class="dek">Fill in a few details, pick a style, and get a personalized invite ready to forward on WhatsApp — starting with weddings, more celebrations on the way.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#weddings">See wedding styles</a>
+      <a class="btn btn-secondary" href="#how">How it works</a>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="fan-card invite-card c1 punjabi">
+        <div class="frame"></div><div class="frame-inner"></div>
+        <div class="invite-card-inner">
+          <div class="ic-header">SHUBH VIVAH</div>
+          <div class="ic-names">Simran<span class="ic-amp">WEDS</span>Arjun</div>
+          <div class="ic-date">5 Dec 2026</div>
+        </div>
+      </div>
+      <div class="fan-card invite-card c2 modern">
+        <div class="frame"></div>
+        <div class="invite-card-inner">
+          <div class="ic-header">TOGETHER WITH OUR FAMILIES</div>
+          <div class="ic-names">Ishita<span class="ic-amp">&amp;</span>Kabir</div>
+          <div class="ic-date">21 Nov 2026</div>
+        </div>
+      </div>
+      <div class="fan-card invite-card c3 south">
+        <div class="frame"></div><div class="frame-inner"></div>
+        <div class="invite-card-inner">
+          <div class="ic-header">SHUBHA VIVAHA</div>
+          <div class="ic-names">Meenakshi<span class="ic-amp">&amp;</span>Arvind</div>
+          <div class="ic-date">14 Jan 2027</div>
+        </div>
+      </div>
+      <div class="fan-card invite-card c4 bengali">
+        <div class="frame"></div><div class="frame-inner"></div>
+        <div class="invite-card-inner">
+          <div class="ic-header">SHUBHO BIBAHO</div>
+          <div class="ic-names">Ananya<span class="ic-amp">&amp;</span>Debjit</div>
+          <div class="ic-date">8 Feb 2027</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">How it works</div>
+      <h2>Three steps, no back and forth</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <h3>Fill in your details</h3>
+        <p>Names, date, venue, and the style that fits your family — takes under two minutes.</p>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <h3>We generate your invite</h3>
+        <p>A quick human check on every order before anything gets sent — no auto-approved mistakes.</p>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <h3>Forward it on WhatsApp</h3>
+        <p>Arrives as a ready-to-share file. Send it to your whole guest list in one go.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="weddings">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Live now</div>
+      <h2>Four styles, more added over time</h2>
+      <p>Community styles are kept intentionally simple until reviewed with someone from that community — tell us if something should look different.</p>
+    </div>
+    <div class="gallery">
+      <div class="gallery-item">
+        <div class="invite-card modern">
+          <div class="frame"></div>
+          <div class="invite-card-inner">
+            <div class="ic-header">TOGETHER WITH OUR FAMILIES</div>
+            <div class="ic-names">Ishita<span class="ic-amp">&amp;</span>Kabir</div>
+            <div class="ic-date">21 Nov 2026</div>
+          </div>
+        </div>
+        <div class="gallery-label">Modern minimal</div>
+      </div>
+      <div class="gallery-item">
+        <div class="invite-card punjabi">
+          <div class="frame"></div><div class="frame-inner"></div>
+          <div class="invite-card-inner">
+            <div class="ic-header">SHUBH VIVAH</div>
+            <div class="ic-names">Simran<span class="ic-amp">WEDS</span>Arjun</div>
+            <div class="ic-date">5 Dec 2026</div>
+          </div>
+        </div>
+        <div class="gallery-label">Royal red &amp; gold</div>
+      </div>
+      <div class="gallery-item">
+        <div class="invite-card south">
+          <div class="frame"></div><div class="frame-inner"></div>
+          <div class="invite-card-inner">
+            <div class="ic-header">SHUBHA VIVAHA</div>
+            <div class="ic-names">Meenakshi<span class="ic-amp">&amp;</span>Arvind</div>
+            <div class="ic-date">14 Jan 2027</div>
+          </div>
+        </div>
+        <div class="gallery-label">South Indian</div>
+      </div>
+      <div class="gallery-item">
+        <div class="invite-card bengali">
+          <div class="frame"></div><div class="frame-inner"></div>
+          <div class="invite-card-inner">
+            <div class="ic-header">SHUBHO BIBAHO</div>
+            <div class="ic-names">Ananya<span class="ic-amp">&amp;</span>Debjit</div>
+            <div class="ic-date">8 Feb 2027</div>
+          </div>
+        </div>
+        <div class="gallery-label">Bengali</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Pricing</div>
+      <h2>Simple, one-time pricing</h2>
+    </div>
+    <div class="pricing">
+      <div class="price-card">
+        <div class="price-tier">Basic</div>
+        <div class="price-amount"><span class="num">₹299</span></div>
+        <div class="price-sub">Single styled invite card</div>
+        <ul class="price-list">
+          <li>One community-style invite</li>
+          <li>Your text, your details</li>
+          <li>Delivered ready to share</li>
+        </ul>
+        <a class="btn btn-secondary" href="https://tally.so/r/WOVzMa" target="_blank" rel="noopener">Order Basic</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-tier">Premium</div>
+        <div class="price-amount"><span class="num">₹799</span></div>
+        <div class="price-sub">Everything in Basic, plus a portrait</div>
+        <ul class="price-list">
+          <li>Everything in Basic</li>
+          <li>Illustrated couple portrait</li>
+          <li>Most popular choice</li>
+        </ul>
+        <a class="btn btn-primary" href="https://tally.so/r/WOVzMa" target="_blank" rel="noopener">Order Premium</a>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Wedding Suite</div>
+        <div class="price-amount"><span class="num">₹1,999</span></div>
+        <div class="price-sub">Save-the-date + invite + thank-you</div>
+        <ul class="price-list">
+          <li>Everything in Premium</li>
+          <li>Matching save-the-date</li>
+          <li>Matching thank-you card</li>
+        </ul>
+        <a class="btn btn-secondary" href="https://tally.so/r/WOVzMa" target="_blank" rel="noopener">Order Suite</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="occasions">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Coming next</div>
+      <h2>More celebrations, same idea</h2>
+      <p>The same personalization engine, built out for the moments that come after the wedding — and the ones that don't need a wedding at all.</p>
+    </div>
+    <div class="occasions">
+      <div class="occasion-card">
+        <h3>Naming ceremony &amp; baby showers</h3>
+        <p>For the families we've already made a wedding invite for, nine months on.</p>
+        <span class="soon-pill">Coming soon</span>
+      </div>
+      <div class="occasion-card">
+        <h3>Festival family cards</h3>
+        <p>Diwali, Holi, Raksha Bandhan — personalized cards for the whole family, not just newlyweds.</p>
+        <span class="soon-pill">Coming soon</span>
+      </div>
+      <div class="occasion-card">
+        <h3>Birthdays &amp; anniversaries</h3>
+        <p>A recurring reason to come back, every year.</p>
+        <span class="soon-pill">Coming soon</span>
+      </div>
+      <div class="occasion-card">
+        <h3>Small business WhatsApp kits</h3>
+        <p>Catalog and festival-offer cards for kirana stores, home bakers, and tuition teachers.</p>
+        <span class="soon-pill">Coming soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt cta-band">
+  <div class="wrap">
+    <h2>Ready to see yours?</h2>
+    <p>Takes about two minutes to fill in, and your invite is ready soon after.</p>
+    <a class="btn btn-primary" href="https://tally.so/r/WOVzMa" target="_blank" rel="noopener">Start your order →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>Shubh — a <a href="https://wrenata.in" target="_blank" rel="noopener">Wrenata</a> product.</span>
+    <span>© 2026 Wrenata</span>
+  </div>
+</footer>
+
+</body>
+</html>
