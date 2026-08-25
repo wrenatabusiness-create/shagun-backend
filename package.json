@@ -1,0 +1,9 @@
+{
+    "name": "shagun-backend",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+          "@vercel/og": "^0.6.2"
+    }
+}
